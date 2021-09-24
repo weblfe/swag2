@@ -15,7 +15,7 @@ import (
 
 	"github.com/ghodss/yaml"
 	"github.com/go-openapi/spec"
-	"github.com/swaggo/swag"
+	swag "github.com/weblfe/swag2"
 )
 
 // Gen presents a generate tool for swag.
@@ -57,13 +57,19 @@ type Config struct {
 	// ParseDependencies whether swag should be parse outside dependency folder
 	ParseDependency bool
 
+	// Parse comment
+	ParseAllComment bool
+
 	// ParseInternal whether swag should parse internal packages
 	ParseInternal bool
+
+	//DisplayScanFile display scan file
+	DisplayScanFile bool
 
 	// Strict whether swag should error or warn when it detects cases which are most likely user errors
 	Strict bool
 
-	// MarkdownFilesDir used to find markdownfiles, which can be used for tag descriptions
+	// MarkdownFilesDir used to find markdown files, which can be used for tag descriptions
 	MarkdownFilesDir string
 
 	// GeneratedTime whether swag should generate the timestamp at the top of docs.go
@@ -93,7 +99,9 @@ func (g *Gen) Build(config *Config) error {
 	p.PropNamingStrategy = config.PropNamingStrategy
 	p.ParseVendor = config.ParseVendor
 	p.ParseDependency = config.ParseDependency
+	p.ParserAllComment = config.ParseAllComment
 	p.ParseInternal = config.ParseInternal
+	p.DisplayScanFile = config.DisplayScanFile
 
 	if err := p.ParseAPIMultiSearchDir(searchDirs, config.MainAPIFile, config.ParseDepth); err != nil {
 		return err

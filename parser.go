@@ -1,4 +1,4 @@
-package swag
+package swag2
 
 import (
 	"encoding/json"
@@ -81,8 +81,14 @@ type Parser struct {
 	// ParseDependencies whether swag should be parse outside dependency folder
 	ParseDependency bool
 
+	// Parse code comment
+	ParserAllComment bool
+
 	// ParseInternal whether swag should parse internal packages
 	ParseInternal bool
+
+	// DisplayScanFile show scan file
+	DisplayScanFile bool
 
 	// Strict whether swag should error or warn when it detects cases which are most likely user errors
 	Strict bool
@@ -628,6 +634,10 @@ func getSchemes(commentLine string) []string {
 
 // ParseRouterAPIInfo parses router api info for given astFile.
 func (parser *Parser) ParseRouterAPIInfo(fileName string, astFile *ast.File) error {
+	if parser.DisplayScanFile {
+		parser.debug.Printf("parser scan file: %s\n", fileName)
+	}
+	// swag func
 	for _, astDescription := range astFile.Decls {
 		astDeclaration, ok := astDescription.(*ast.FuncDecl)
 		if ok && astDeclaration.Doc != nil && astDeclaration.Doc.List != nil {
@@ -662,6 +672,51 @@ func (parser *Parser) ParseRouterAPIInfo(fileName string, astFile *ast.File) err
 
 				parser.swagger.Paths.Paths[routeProperties.Path] = pathItem
 			}
+		}
+	}
+
+	// swag2 parse All comment
+	if parser.ParserAllComment {
+		// show scan file use
+		if parser.DisplayScanFile {
+			parser.debug.Printf("use swag2 parser all comment: %s \n", fileName)
+		}
+		for _, comment := range astFile.Comments {
+			if comment.List != nil {
+				// for per 'function' comment, create a new 'Operation' object
+				operation := NewOperation(parser, SetCodeExampleFilesDirectory(parser.codeExampleFilesDir))
+				for _, comment := range comment.List {
+					err := operation.ParseComment(comment.Text, astFile)
+					if err != nil {
+						return fmt.Errorf("ParseComment error in file %s :%+v", fileName, err)
+					}
+				}
+
+				for _, routeProperties := range operation.RouterProperties {
+					var pathItem spec.PathItem
+					var ok bool
+
+					pathItem, ok = parser.swagger.Paths.Paths[routeProperties.Path]
+					if !ok {
+						pathItem = spec.PathItem{}
+					}
+
+					// check if we already have a operation for this path and method
+					if hasRouteMethodOp(pathItem, routeProperties.HTTPMethod) {
+						err := fmt.Errorf("route %s %s is declared multiple times", routeProperties.HTTPMethod, routeProperties.Path)
+						if parser.Strict {
+							return err
+						}
+						parser.debug.Printf("warning: %s\n", err)
+					}
+					if _, exists := parser.swagger.Paths.Paths[routeProperties.Path]; exists {
+						continue
+					}
+					setRouteMethodOp(&pathItem, routeProperties.HTTPMethod, &operation.Operation)
+					parser.swagger.Paths.Paths[routeProperties.Path] = pathItem
+				}
+			}
+
 		}
 	}
 

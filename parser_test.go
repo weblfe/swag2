@@ -1,4 +1,4 @@
-package swag
+package swag2
 
 import (
 	"bytes"
@@ -201,6 +201,90 @@ func TestParser_ParseGeneralApiInfo(t *testing.T) {
 
 	b, _ := json.MarshalIndent(p.swagger, "", "    ")
 	assert.Equal(t, expected, string(b))
+}
+
+func TestParser_ParseGeneralApiInfoByInterface(t *testing.T) {
+		t.Parallel()
+
+		expected := `{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server celler server.",
+        "title": "Swagger Example API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {},
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "BasicAuth": {
+            "type": "basic"
+        },
+        "OAuth2AccessCode": {
+            "type": "oauth2",
+            "flow": "accessCode",
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information"
+            }
+        },
+        "OAuth2Application": {
+            "type": "oauth2",
+            "flow": "application",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "write": " Grants write access"
+            }
+        },
+        "OAuth2Implicit": {
+            "type": "oauth2",
+            "flow": "implicit",
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "write": " Grants write access"
+            }
+        },
+        "OAuth2Password": {
+            "type": "oauth2",
+            "flow": "password",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "read": " Grants read access",
+                "write": " Grants write access"
+            }
+        }
+    },
+    "x-extension-openapi": {
+        "example": "value on a json format"
+    }
+}`
+		gopath := os.Getenv("GOPATH")
+		assert.NotNil(t, gopath)
+		p := New()
+		err := p.ParseGeneralAPIInfo("testdata/interface/main.go")
+		assert.NoError(t, err)
+
+		b, _ := json.MarshalIndent(p.swagger, "", "    ")
+		assert.Equal(t, expected, string(b))
 }
 
 func TestParser_ParseGeneralApiInfoTemplated(t *testing.T) {
@@ -1094,6 +1178,7 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
 	searchDir := "testdata/simple2"
 	p := New()
 	p.PropNamingStrategy = SnakeCase
+	p.ParserAllComment = true
 	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
 	assert.NoError(t, err)
 

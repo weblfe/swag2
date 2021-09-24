@@ -1,4 +1,4 @@
-package swag
+package swag2
 
 import (
 	"go/ast"

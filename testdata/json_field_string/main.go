@@ -30,7 +30,7 @@ func DoSomething(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Print(err.Error())
 	}
-	json.NewEncoder(w).Encode(ojbectFromJSON)
+	json.NewEncoder(w).Encode(nil)
 }
 
 // @title Swagger Example API
@@ -39,6 +39,6 @@ func DoSomething(w http.ResponseWriter, r *http.Request) {
 // @host localhost:4000
 // @basePath /
 func main() {
-	http.HandleFund("/do-something", DoSomething)
+	http.HandleFunc("/do-something", DoSomething)
 	http.ListenAndServe(":8080", nil)
 }

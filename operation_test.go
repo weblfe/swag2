@@ -1,4 +1,4 @@
-package swag
+package swag2
 
 import (
 	"encoding/json"
@@ -693,7 +693,7 @@ func TestParseResponseCommentWithObjectTypeInSameFile(t *testing.T) {
 	operation.parser.addTestType("swag.testOwner")
 
 	fset := token.NewFileSet()
-	astFile, err := goparser.ParseFile(fset, "operation_test.go", `package swag
+	astFile, err := goparser.ParseFile(fset, "operation_test.go", `package swag2
 	type testOwner struct {
 
 	}
