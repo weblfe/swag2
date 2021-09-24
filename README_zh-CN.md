@@ -46,37 +46,37 @@ Swag将Go的注释转换为Swagger2.0文档。我们为流行的 [Go Web Framewo
 2. 使用如下命令下载swag：
 
 ```bash
-$ go get -u github.com/swaggo/swag/cmd/swag
+$ go get -u github.com/weblfe/swag2/cmd/swag2
 
 # 1.16 及以上版本
-$ go install github.com/swaggo/swag/cmd/swag@latest
+$ go install github.com/weblfe/swag2/cmd/swag2@latest
 ```
 
 从源码开始构建的话，需要有Go环境（1.13及以上版本）。
 
 或者从github的release页面下载预编译好的二进制文件。
 
-3. 在包含`main.go`文件的项目根目录运行`swag init`。这将会解析注释并生成需要的文件（`docs`文件夹和`docs/docs.go`）。
+3. 在包含`main.go`文件的项目根目录运行`swag2 init`。这将会解析注释并生成需要的文件（`docs`文件夹和`docs/docs.go`）。
 
 ```bash
-swag init
+swag2 init
 ```
 
 确保导入了生成的`docs/docs.go`文件，这样特定的配置文件才会被初始化。如果通用API指数没有写在`main.go`中，可以使用`-g`标识符来告知swag。
 
 ```bash
-swag init -g http/api.go
+swag2 init -g http/api.go
 ```
 
 ## swag cli
 
 ```bash
-swag init -h
+swag2 init -h
 NAME:
-   swag init - Create docs.go
+   swag2 init - Create docs.go
 
 USAGE:
-   swag init [command options] [arguments...]
+   swag2 init [command options] [arguments...]
 
 OPTIONS:
    --generalInfo value, -g value       API通用信息所在的go源文件路径，如果是相对路径则基于API解析目录 (默认: "main.go")
@@ -102,7 +102,7 @@ OPTIONS:
 
 [点击此处](https://github.com/swaggo/swag/tree/master/example/celler)查看示例源代码。
 
-1. 使用`swag init`生成Swagger2.0文档后，导入如下代码包：
+1. 使用`swag2 init`生成Swagger2.0文档后，导入如下代码包：
 
 ```go
 import "github.com/swaggo/gin-swagger" // gin-swagger middleware

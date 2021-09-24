@@ -47,10 +47,10 @@ Swag converts Go annotations to Swagger Documentation 2.0. We've created a varie
 
 2. Download swag by using:
 ```sh
-$ go get -u github.com/swaggo/swag/cmd/swag
+$ go get -u github.com/weblfe/swag2/cmd/swag2
 
 # 1.16 or newer
-$ go install github.com/swaggo/swag/cmd/swag@latest
+$ go install github.com/weblfe/swag2/cmd/swag2@latest
 ```
 To build from source you need [Go](https://golang.org/dl/) (1.13 or newer).
 
@@ -58,23 +58,23 @@ Or download a pre-compiled binary from the [release page](https://github.com/swa
 
 3. Run `swag init` in the project's root folder which contains the `main.go` file. This will parse your comments and generate the required files (`docs` folder and `docs/docs.go`).
 ```sh
-$ swag init
+$ swag2 init
 ```
 
   Make sure to import the generated `docs/docs.go` so that your specific configuration gets `init`'ed. If your General API annotations do not live in `main.go`, you can let swag know with `-g` flag.
   ```sh
-  swag init -g http/api.go
+  swag2 init -g http/api.go
   ```
 
 ## swag cli
 
 ```sh
-$ swag init -h
+$ swag2 init -h
 NAME:
-   swag init - Create docs.go
+   swag2 init - Create docs.go
 
 USAGE:
-   swag init [command options] [arguments...]
+   swag2 init [command options] [arguments...]
 
 OPTIONS:
   --generalInfo value, -g value          Go file path in which 'swagger general API Info' is written (default: "main.go")
