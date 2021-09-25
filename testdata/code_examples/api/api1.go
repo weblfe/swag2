@@ -1,7 +1,7 @@
 package api
 
 import (
-	_ "github.com/swaggo/swag/testdata/conflict_name/model"
+	_ "github.com/weblfe/swag2/testdata/conflict_name/model"
 	"net/http"
 )
 
