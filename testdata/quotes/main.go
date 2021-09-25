@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/swaggo/swag"
 	"github.com/weblfe/swag2/testdata/quotes/api"
-	_ "github.com/weblfe/swag2/testdata/quotes/docs"
 )
 
 func ReadDoc() string {
